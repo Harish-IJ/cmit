@@ -1,0 +1,36 @@
+{
+  "name": "cmit",
+  "version": "0.0.0",
+  "description": "A simple CLI tool for managing your commits",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Harish-IJ/cmit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Harish-IJ/cmit/issues"
+  },
+  "homepage": "https://github.com/Harish-IJ/cmit#readme",
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "cosmiconfig": "^9.0.0",
+    "inquirer": "^12.11.1",
+    "ora": "^9.0.0",
+    "simple-git": "^3.30.0"
+  },
+  "devDependencies": {
+    "@types/chalk": "^0.4.31",
+    "@types/inquirer": "^9.0.9",
+    "@types/node": "^24.10.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
