@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "prettier": "prettier . --write",
+    "prettier:file": "prettier --write",
+    "prettier:check": "prettier . --check",
+    "prettier:staged": "prettier --write $(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')"
   },
   "repository": {
     "type": "git",
@@ -30,6 +34,7 @@
     "@types/chalk": "^0.4.31",
     "@types/inquirer": "^9.0.9",
     "@types/node": "^24.10.1",
+    "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
