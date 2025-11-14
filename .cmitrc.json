@@ -1,0 +1,16 @@
+{
+  "types": {
+    "feat": "new feature",
+    "fix": "bug fix",
+    "docs": "documentation changes",
+    "style": "formatting changes",
+    "refactor": "refactor code",
+    "test": "tests",
+    "chore": "build/tooling"
+  },
+  "emoji": false,
+  "autoScope": false,
+  "lintBefore": false,
+  "aiEnabled": false,
+  "autoPush": false
+}

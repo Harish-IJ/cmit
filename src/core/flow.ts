@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import ora from 'ora';
+import inquirer from 'inquirer';
 import {
   getChangedFiles,
   stageFiles,
@@ -70,7 +71,7 @@ export async function runCommitFlow(opts: Opts, config: CmitConfig) {
   let useAmend = false;
   if (unpushed && !opts.amend) {
     // only prompt if user didn't pass --amend
-    const { amend } = await require('inquirer').prompt([
+    const { amend } = await inquirer.prompt([
       {
         type: 'confirm',
         name: 'amend',
