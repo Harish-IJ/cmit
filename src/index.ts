@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { argv } from 'node:process';
 import chalk from 'chalk';
 import { runCommitFlow } from './core/flow';
@@ -39,3 +38,17 @@ import { details } from './details';
     process.exit(1);
   }
 })();
+
+//* Global fallback handlers
+process.on('unhandledRejection', (err) => {
+  console.log(chalk.red('Unhandled rejection:'), err);
+});
+
+process.on('uncaughtException', (err) => {
+  console.log(chalk.red('Unhandled error:'), err);
+});
+
+process.on('SIGINT', () => {
+  console.log(chalk.red('\n✋ Cancelled.'));
+  process.exit(1);
+});

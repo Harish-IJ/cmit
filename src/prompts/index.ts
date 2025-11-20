@@ -1,17 +1,9 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
+import { defaultCommitTypes } from '../utils/constants';
 
 export const commitTypes = (custom?: Record<string, string>): { name: string; value: string }[] => {
-  const defaults = {
-    feat: 'new feature',
-    fix: 'bug fix',
-    docs: 'documentation',
-    style: 'formatting/style',
-    refactor: 'refactor',
-    test: 'tests',
-    chore: 'chore',
-  };
-  const merged = { ...defaults, ...(custom || {}) } as Record<string, string>;
+  const merged = { ...defaultCommitTypes, ...(custom || {}) } as Record<string, string>;
   return Object.keys(merged).map((k) => ({
     name: `${k} — ${merged[k]}`,
     value: k,
