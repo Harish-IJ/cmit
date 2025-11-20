@@ -1,5 +1,3 @@
----
-
 # **cmit — Interactive Commit Helper**
 
 `cmit` is a lightweight, elegant CLI tool that makes your Git commit workflow faster, cleaner, and more consistent.
@@ -180,29 +178,10 @@ cmit -q fix "Crash fix" --push
 
 ---
 
-# 🛤️ **Project Structure**
-
-```
-cmit/
- ├─ src/
- │   ├─ core/flow.ts         → main commit flow
- │   ├─ prompts/             → UI prompts
- │   ├─ utils/               → git & stats helpers
- │   ├─ config/              → config loader
- │   ├─ index.ts             → entry point
- ├─ dist/
- ├─ package.json
- ├─ tsconfig.json
- ├─ README.md
-```
-
----
-
 # 🚧 **Upcoming Features**
 
 Planned enhancements:
 
-- 🤖 **AI commit message generation** (OpenAI/Claude)
 - 🧪 **Pre-commit lint support**
 - 🧩 **Scopes auto-detection (folder-based)**
 - 📝 **Conventional Commit validation**
@@ -210,14 +189,7 @@ Planned enhancements:
 - 🌈 **Emoji mode**
 - ⚡ **CI integration for status checks**
 
-You can request or vote for features in the Issues tab.
-
----
-
-# 🤝 **Contributing**
-
-We welcome contributions!
-Follow these steps:
+You can request or vote for features in the Upcoming Issues tab.
 
 ---
 
@@ -278,7 +250,7 @@ Then open a PR targeting:
 
 > **test branch**
 
-We review PRs quickly and provide feedback.
+I will review PRs quickly and provide feedback.
 
 ---
 
@@ -295,35 +267,6 @@ Before opening a PR:
   ```bash
   npm run build
   ```
-
----
-
-# 🚀 **Release Process**
-
-Maintainer-only:
-
-### 1. Merge tested changes from `test` → `dev`
-
-### 2. Update version in `details.ts` & package.json
-
-### 3. Build:
-
-```bash
-npm run build
-```
-
-### 4. Publish:
-
-```bash
-npm publish
-```
-
-### 5. Tag release:
-
-```bash
-git tag v1.2.3
-git push origin --tags
-```
 
 ---
 
