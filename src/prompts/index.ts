@@ -2,6 +2,19 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import { defaultCommitTypes } from '../utils/constants';
 
+export async function safePrompt<T = Record<string, any>>(questions: any): Promise<T> {
+  try {
+    const result = await inquirer.prompt(questions);
+    return result as T;
+  } catch (err: any) {
+    if (err?.isTtyError || err?.message?.includes('force closed')) {
+      console.log(chalk.red('\n✋ Cancelled.'));
+      process.exit(1);
+    }
+    throw err;
+  }
+}
+
 export const commitTypes = (custom?: Record<string, string>): { name: string; value: string }[] => {
   const merged = { ...defaultCommitTypes, ...(custom || {}) } as Record<string, string>;
   return Object.keys(merged).map((k) => ({
@@ -15,7 +28,7 @@ export async function askStageAction(staged: string[], unstaged: string[], untra
   console.log(chalk.bold('Unstaged files:'), unstaged.length ? unstaged.join(', ') : chalk.dim('none'));
   console.log(chalk.bold('Untracked files:'), untracked.length ? untracked.join(', ') : chalk.dim('none'));
 
-  const { action } = await inquirer.prompt<{ action: string }>([
+  const { action } = await safePrompt<{ action: string }>([
     {
       type: 'list',
       name: 'action',
@@ -32,7 +45,7 @@ export async function askStageAction(staged: string[], unstaged: string[], untra
 
 export async function pickFiles(message: string, files: string[]) {
   if (!files.length) return [];
-  const { chosen } = await inquirer.prompt<{ chosen: string[] }>([
+  const { chosen } = await safePrompt<{ chosen: string[] }>([
     {
       type: 'checkbox',
       name: 'chosen',
@@ -44,7 +57,7 @@ export async function pickFiles(message: string, files: string[]) {
 }
 
 export async function askCommitType(typesChoices: { name: string; value: string }[]) {
-  const { type } = await inquirer.prompt<{ type: string }>([
+  const { type } = await safePrompt<{ type: string }>([
     { type: 'list', name: 'type', message: 'Choose commit type', choices: typesChoices },
   ]);
   return type;
@@ -55,7 +68,7 @@ export async function askMessageAndDesc(type: string, scope?: string, quick?: bo
     return { message: quickArgs[1], description: quickArgs.slice(2).join(' ') || '' };
   }
 
-  const { message } = await inquirer.prompt<{ message: string }>([
+  const { message } = await safePrompt<{ message: string }>([
     {
       type: 'input',
       name: 'message',
@@ -64,7 +77,7 @@ export async function askMessageAndDesc(type: string, scope?: string, quick?: bo
     },
   ]);
 
-  const { description } = await inquirer.prompt<{ description: string }>([
+  const { description } = await safePrompt<{ description: string }>([
     {
       type: 'input',
       name: 'description',
@@ -80,6 +93,6 @@ export async function confirmCommitPreview(fullMessage: string, files: string[])
   console.log('\n' + chalk.green('Commit preview:'));
   console.log(chalk.bold(fullMessage) + '\n');
   console.log(chalk.dim('Staged files: ' + files.join(', ')));
-  const { ok } = await inquirer.prompt<{ ok: boolean }>([{ type: 'confirm', name: 'ok', message: 'Proceed to commit?', default: true }]);
+  const { ok } = await safePrompt<{ ok: boolean }>([{ type: 'confirm', name: 'ok', message: 'Proceed to commit?', default: true }]);
   return ok;
 }

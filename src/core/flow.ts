@@ -1,8 +1,7 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import inquirer from 'inquirer';
 import { getChangedFiles, stageFiles, unstageFiles, hasUnpushedCommits, createCommit, pushCurrentBranch } from '../utils/git';
-import { askStageAction, pickFiles, commitTypes, askCommitType, askMessageAndDesc, confirmCommitPreview } from '../prompts';
+import { askStageAction, pickFiles, commitTypes, askCommitType, askMessageAndDesc, confirmCommitPreview, safePrompt } from '../prompts';
 import { type CmitConfig } from '../config';
 import { incrementType } from '../utils/stats';
 import simpleGit from 'simple-git';
@@ -16,15 +15,28 @@ type Opts = {
 };
 
 async function handleFileStaging(): Promise<{ staged: string[]; unstaged: string[]; untracked: string[] }> {
-  let { staged, unstaged, untracked } = await getChangedFiles();
+  // Normalize status so staged never appears in unstaged
+  const normalize = (s: { staged: string[]; unstaged: string[]; untracked: string[] }) => ({
+    staged: s.staged,
+    unstaged: s.unstaged.filter((f) => !s.staged.includes(f)),
+    untracked: s.untracked,
+  });
+
+  let status = normalize(await getChangedFiles());
+  let { staged, unstaged, untracked } = status;
 
   while (true) {
     const action = await askStageAction(staged, unstaged, untracked);
+
     if (action === 'stage') {
       const toStage = await pickFiles('Select files to stage', [...unstaged, ...untracked]);
       if (toStage.length) {
         const spinner = ora('Staging files...').start();
         await stageFiles(toStage);
+
+        // allow git index to update (fixes the "still unstaged" bug)
+        await new Promise((res) => setTimeout(res, 50));
+
         spinner.succeed('Staged');
       }
     } else if (action === 'unstage') {
@@ -32,15 +44,19 @@ async function handleFileStaging(): Promise<{ staged: string[]; unstaged: string
       if (toUnstage.length) {
         const spinner = ora('Unstaging files...').start();
         await unstageFiles(toUnstage);
+
+        await new Promise((res) => setTimeout(res, 50));
+
         spinner.succeed('Unstaged');
       }
     } else {
       break;
     }
-    const changed = await getChangedFiles();
-    staged = changed.staged;
-    unstaged = changed.unstaged;
-    untracked = changed.untracked;
+
+    status = normalize(await getChangedFiles());
+    staged = status.staged;
+    unstaged = status.unstaged;
+    untracked = status.untracked;
   }
 
   if (!staged.length) {
@@ -60,7 +76,7 @@ async function shouldAmend(opts: Opts): Promise<boolean> {
     return false;
   }
 
-  const { amend } = await inquirer.prompt([
+  const { amend } = await safePrompt([
     {
       type: 'confirm',
       name: 'amend',
