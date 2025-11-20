@@ -1,8 +1,12 @@
 {
   "name": "cmit",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A simple CLI tool for managing your commits",
-  "main": "index.js",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "bin": {
+    "cmit": "dist/index.js"
+  },
   "scripts": {
     "dev": "ts-node src/index.ts",
     "build": "tsc",

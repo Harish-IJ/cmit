@@ -28,11 +28,7 @@ export async function unstageFiles(files: string[]): Promise<void> {
  * Create a commit. If `amend` is true, amend the previous commit.
  * message = header, description is optional.
  */
-export async function createCommit(
-  message: string,
-  description?: string,
-  amend = false,
-): Promise<void> {
+export async function createCommit(message: string, description?: string, amend = false): Promise<void> {
   const full = description ? `${message}\n\n${description}` : message;
   if (amend) {
     // Note: simple-git options for amend require raw args
@@ -59,7 +55,7 @@ export async function pushCurrentBranch(): Promise<void> {
 export async function hasUnpushedCommits(): Promise<boolean> {
   try {
     const out = await git.raw(['rev-list', '--count', '@{u}..HEAD']);
-    return parseInt(out.trim(), 10) > 0;
+    return Number.parseInt(out.trim(), 10) > 0;
   } catch {
     // upstream not set or other git error
     return false;

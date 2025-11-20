@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-import { argv } from 'process';
+import { argv } from 'node:process';
 import chalk from 'chalk';
 import { runCommitFlow } from './core/flow';
 import { loadConfig } from './config';
+import { details } from './details';
 
-async function main() {
+(async () => {
   const args = argv.slice(2);
 
   if (args.includes('--help') || args.includes('-h')) {
@@ -13,14 +14,12 @@ async function main() {
     console.log('  -q, --quick     quick mode: provide type + message inline');
     console.log('  --push          push after commit');
     console.log('  --amend         amend last local commit');
-    console.log('  --ai            (placeholder) AI generate commit message');
     console.log('  --version       show version');
     process.exit(0);
   }
 
   if (args.includes('--version') || args.includes('-v')) {
-    // version from package.json could be injected; simple fallback:
-    console.log('cmit 0.1.0');
+    console.log(`cmit ${details.version}`);
     process.exit(0);
   }
 
@@ -39,6 +38,4 @@ async function main() {
     console.error(chalk.red('Error:'), (err as Error).message);
     process.exit(1);
   }
-}
-
-main();
+})();
